@@ -1,23 +1,35 @@
-import React, { useEffect, useState } from "react";
-
+import React, {useState} from "react";
 import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
-
-import { editColorService, deleteColorService } from '../services/colorServices';
-import fetchColorService from '../services/fetchColorService';
 
 const BubblePage = () => {
   const [colors, setColors] = useState([]);
   const [editing, setEditing] = useState(false);
 
   const toggleEdit = (value) => {
-    setEditing(value);
+    setEditing(value)
   };
 
   const saveEdit = (editColor) => {
+    const edit = {
+      method: 'PUT',
+      headers: { 
+        'Authorization': 'token',
+      }
+    };
+  fetch(`http://localhost:5000/api/colors/:id`, editColor)
+      .then(res => res.json())
+      .then(data => setColors(data.id));
   };
 
   const deleteColor = (colorToDelete) => {
+   const colorDelete = {
+      method: 'DELETE',
+      headers: { 
+          'Authorization': 'token',
+      }};
+      fetch(`http://localhost:5000/api/colors/123`, colorToDelete)
+        .then(() => setEditing('Deleted'))
   };
 
   return (
@@ -25,7 +37,7 @@ const BubblePage = () => {
       <ColorList colors={colors} editing={editing} toggleEdit={toggleEdit} saveEdit={saveEdit} deleteColor={deleteColor}/>
       <Bubbles colors={colors}/>
     </div>
-  );
+  )
 };
 
 export default BubblePage;
